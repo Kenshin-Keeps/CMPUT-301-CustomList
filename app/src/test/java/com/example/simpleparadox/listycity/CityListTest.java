@@ -1,7 +1,8 @@
 package com.example.simpleparadox.listycity;
 
-import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +18,7 @@ class CityListTest {
         return new City("Edmonton", "Alberta");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void testAdd() {
         CityList cityList = mockCityList();
 
@@ -30,19 +31,22 @@ class CityListTest {
         assertTrue(cityList.getCities().contains(city));
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void testAddException() {
-        CityList cityList = mockCityList();
+        final CityList cityList = mockCityList();
 
-        City city = new City("Yellowknife", "Northwest Territories");
+        final City city = new City("Yellowknife", "Northwest Territories");
         cityList.add(city);
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            cityList.add(city);
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                cityList.add(city);
+            }
         });
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void testGetCities() {
         CityList cityList = mockCityList();
 
@@ -53,6 +57,48 @@ class CityListTest {
 
         assertEquals(0, city.compareTo(cityList.getCities().get(0)));
         assertEquals(0, mockCity().compareTo(cityList.getCities().get(1)));
+    }
+
+    @org.junit.jupiter.api.Test
+    void testDelete() {
+        CityList cityList = mockCityList();
+
+        assertEquals(1, cityList.getCities().size());
+
+        City city = new City("Regina", "Saskatchewan");
+        cityList.add(city);
+        cityList.delete(city);
+
+
+
+        assertEquals(1, cityList.getCities().size());
+        assertTrue(!cityList.getCities().contains(city));
+    }
+
+    @org.junit.jupiter.api.Test
+    void testDeleteException(){
+        final CityList cityList = mockCityList();
+
+        final City city = new City("Yellowknife", "Northwest Territories");
+        cityList.add(city);
+        cityList.delete(city);
+
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                cityList.delete(city);
+            }
+        });
+    }
+
+    @Test
+    void testgetsize(){
+        CityList cityList = mockCityList();
+
+        City city = new City("Yellowknife", "Northwest Territories");
+        cityList.add(city);
+        assertEquals(2, cityList.getCities().size());
+        assertEquals(2, cityList.getsize());
     }
 
 }
